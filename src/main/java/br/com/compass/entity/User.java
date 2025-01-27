@@ -1,4 +1,4 @@
-package br.com.compass.entities;
+package br.com.compass.entity;
 
 import java.io.Serializable;
 import java.time.LocalDate;
