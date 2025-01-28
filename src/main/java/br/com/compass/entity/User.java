@@ -1,34 +1,59 @@
 package br.com.compass.entity;
 
+import br.com.compass.entity.enums.AccountType;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+@Entity
+@Table(name = "Users")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Integer id;
+
+    @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
+
+    @Column(unique = true, nullable = false, length = 11)
     private String cpf;
+
+    @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
+
+    @Column(nullable = false)
+    private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Account> accounts = new HashSet<>();
 
     public User() {
     }
 
-    public User(Long id, String name, LocalDate birthDate, String cpf, String phoneNumber) {
-        this.id = id;
+    public User(String name, LocalDate birthDate, String cpf, String phoneNumber, String password) {
         this.name = name;
         this.birthDate = birthDate;
         this.cpf = cpf;
         this.phoneNumber = phoneNumber;
+        setPassword(password);
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -62,6 +87,36 @@ public class User implements Serializable {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Set<Account> getAccounts() {
+        return Collections.unmodifiableSet(accounts);
+    }
+
+    public Account createAccount(AccountType type) {
+        boolean hasAccountType = accounts.stream()
+                .anyMatch(account -> account.getAccountType() == type);
+
+        if (hasAccountType) {
+            throw new IllegalStateException(
+                    "User already has a " + type + " account");
+        }
+
+        Account account = new Account(this, type);
+        accounts.add(account);
+        return account;
+    }
+
+    public Account getAccount(AccountType type) {
+        return accounts.stream()
+                .filter(account -> account.getAccountType() == type)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException(
+                        "User does not have a " + type + " account"));
     }
 
     @Override
