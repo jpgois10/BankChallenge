@@ -36,7 +36,7 @@ public class Account implements Serializable {
     @Column(name = "account_number", nullable = false, unique = true, length = 13)
     private String accountNumber;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions = new ArrayList<>();
 
     public Account() {
@@ -86,6 +86,11 @@ public class Account implements Serializable {
 
     public List<Transaction> getTransactions() {
         return transactions;
+    }
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+        transaction.setAccount(this);
     }
 
 
