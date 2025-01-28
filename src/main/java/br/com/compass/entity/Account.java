@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -34,14 +36,17 @@ public class Account implements Serializable {
     @Column(name = "account_number", nullable = false, unique = true, length = 13)
     private String accountNumber;
 
+    @OneToMany(mappedBy = "account")
+    private List<Transaction> transactions = new ArrayList<>();
+
     public Account() {
     }
 
     public Account(User user, AccountType accountType) {
         this.user = user;
         this.accountType = accountType;
-        this.balance = BigDecimal.ZERO;
-        this.accountNumber = generateAccountNumber(user.getCpf(), accountType);
+        balance = BigDecimal.ZERO;
+        accountNumber = generateAccountNumber(user.getCpf(), accountType);
     }
 
     private String generateAccountNumber(String cpf, AccountType type) {
@@ -60,6 +65,10 @@ public class Account implements Serializable {
         return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public BigDecimal getBalance() {
         return balance;
     }
@@ -74,6 +83,11 @@ public class Account implements Serializable {
     public String getAccountNumber() {
         return accountNumber;
     }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
 
     @Override
     public boolean equals(Object o) {

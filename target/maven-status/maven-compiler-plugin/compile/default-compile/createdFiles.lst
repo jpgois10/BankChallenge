@@ -1,2 +1,7 @@
-br\com\compass\entities\User.class
+br\com\compass\entity\enums\AccountType.class
+br\com\compass\entity\User.class
+br\com\compass\util\HibernateUtil.class
+br\com\compass\entity\enums\TransactionType.class
+br\com\compass\entity\Transaction.class
 br\com\compass\App.class
+br\com\compass\entity\Account.class

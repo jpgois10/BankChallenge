@@ -1,2 +1,7 @@
-C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entities\User.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\enums\AccountType.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\Account.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\enums\TransactionType.java
 C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\App.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\Transaction.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\util\HibernateUtil.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\User.java
