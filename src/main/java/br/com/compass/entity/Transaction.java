@@ -119,37 +119,6 @@ public class Transaction implements Serializable {
     }
 
 
-    public void processDeposit() {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
-            throw new IllegalStateException("Deposit amount must be greater than zero");
-        }
-        account.setBalance(account.getBalance().add(amount));
-        account.addTransaction(this);
-    }
-
-    public void processWithdrawal() {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
-            throw new IllegalStateException("Withdrawal amount must be greater than zero");
-        }
-        if (account.getBalance().compareTo(amount) <= 0.00) {
-            throw new IllegalStateException("Insufficient funds");
-        }
-        account.setBalance(account.getBalance().subtract(amount));
-        account.addTransaction(this);
-    }
-
-    public void processTransfer() {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
-            throw new IllegalStateException("Transfer amount must be greater than zero");
-        }
-        if (account.getBalance().compareTo(amount) <= 0.00) {
-            throw new IllegalStateException("Insufficient funds for transfer");
-        }
-        account.setBalance(account.getBalance().subtract(amount));
-        transferDestinationAccount.setBalance(transferDestinationAccount.getBalance().add(amount));
-        account.addTransaction(this);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
