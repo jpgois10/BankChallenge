@@ -11,7 +11,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "Users", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "cpf")
+})
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -35,7 +37,7 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Account> accounts = new HashSet<>();
 
     public User() {
@@ -117,6 +119,11 @@ public class User implements Serializable {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException(
                         "User does not have a " + type + " account"));
+    }
+
+    public void addAccount(Account account) {
+        accounts.add(account);
+        account.setUser(this);
     }
 
     @Override
