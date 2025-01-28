@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 @Entity
@@ -39,11 +41,20 @@ public class Transaction implements Serializable {
     public Transaction() {
     }
 
+    public Transaction(Account account, TransactionType transactionType, BigDecimal amount) {
+        this.account = account;
+        this.transactionType = transactionType;
+        this.amount = amount;
+        this.transferDestinationAccount = null;
+        this.transactionDate = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
+    }
+
     public Transaction(Account account, TransactionType transactionType, BigDecimal amount, Account transferDestinationAccount) {
         this.account = account;
         this.transactionType = transactionType;
         this.amount = amount;
         this.transferDestinationAccount = transferDestinationAccount;
+        this.transactionDate = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
     }
 
     public Integer getId() {
@@ -55,6 +66,9 @@ public class Transaction implements Serializable {
         return account;
     }
 
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     public TransactionType getTransactionType() {
         return transactionType;
@@ -80,7 +94,6 @@ public class Transaction implements Serializable {
         this.amount = amount;
     }
 
-
     public LocalDateTime getTransactionDate() {
         return transactionDate;
     }
@@ -100,32 +113,41 @@ public class Transaction implements Serializable {
         this.transferDestinationAccount = transferDestinationAccount;
     }
 
+    public String getFormattedTransactionDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return transactionDate.format(formatter);
+    }
+
+
     public void processDeposit() {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
             throw new IllegalStateException("Deposit amount must be greater than zero");
         }
         account.setBalance(account.getBalance().add(amount));
+        account.addTransaction(this);
     }
 
     public void processWithdrawal() {
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
             throw new IllegalStateException("Withdrawal amount must be greater than zero");
         }
-        if (account.getBalance().compareTo(amount) < 0) {
+        if (account.getBalance().compareTo(amount) <= 0.00) {
             throw new IllegalStateException("Insufficient funds");
         }
         account.setBalance(account.getBalance().subtract(amount));
+        account.addTransaction(this);
     }
 
     public void processTransfer() {
         if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
             throw new IllegalStateException("Transfer amount must be greater than zero");
         }
-        if (account.getBalance().compareTo(amount) < 0.00) {
+        if (account.getBalance().compareTo(amount) <= 0.00) {
             throw new IllegalStateException("Insufficient funds for transfer");
         }
         account.setBalance(account.getBalance().subtract(amount));
         transferDestinationAccount.setBalance(transferDestinationAccount.getBalance().add(amount));
+        account.addTransaction(this);
     }
 
     @Override
