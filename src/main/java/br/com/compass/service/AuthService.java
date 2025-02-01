@@ -17,11 +17,11 @@ public class AuthService {
         this.userRepository = userRepository;
     }
 
-//    public void registerUser(User user) {
-//        validateUser(user.getCpf(), user.getPassword());
-//        userRepository.save(user);
-//        System.out.println("User successfully registered!");
-//    }
+    public void registerUser(User user) {
+        validateUser(user.getCpf(), user.getPassword());
+        userRepository.save(user);
+        System.out.println("User successfully registered!");
+    }
 
     public void loginUser(String cpf, String password) {
         User user = userRepository.findByCpf(cpf);
@@ -30,7 +30,7 @@ public class AuthService {
             return;
         }
 
-        passwordValidator.validate(password);  // Validando a senha fornecida
+        passwordValidator.validate(password);
         if (user.getPassword().equals(password)) {
             System.out.println("Login bem-sucedido!");
         } else {
