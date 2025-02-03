@@ -11,7 +11,7 @@ public abstract class RepoFactory<T> {
     private final EntityManager entityManager;
 
     public RepoFactory() {
-        this.entityManager = Persistence.createEntityManagerFactory("yourPersistenceUnit").createEntityManager();
+        this.entityManager = Persistence.createEntityManagerFactory("bankChallengePU").createEntityManager();
     }
 
     public void save(T entity) {
@@ -56,5 +56,9 @@ public abstract class RepoFactory<T> {
         if (entityManager.isOpen()) {
             entityManager.close();
         }
+    }
+
+    protected EntityManager getEntityManager() {
+        return entityManager;
     }
 }

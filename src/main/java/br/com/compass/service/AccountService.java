@@ -1,33 +1,56 @@
 package br.com.compass.service;
 
 import br.com.compass.entity.Account;
-import br.com.compass.entity.User;
-import br.com.compass.entity.enums.AccountType;
+import br.com.compass.entity.Transaction;
+import br.com.compass.entity.enums.TransactionType;
 import br.com.compass.repository.AccountRepository;
+import br.com.compass.repository.TransactionRepository;
 
-import java.util.Optional;
+import java.math.BigDecimal;
 
 public class AccountService {
-
     private AccountRepository accountRepository;
+    private TransactionRepository transactionRepository;
 
-    public AccountService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public AccountService() {
+        this.accountRepository = new AccountRepository();
+        this.transactionRepository = new TransactionRepository();
     }
 
-    public Account createAccount(User user, AccountType accountType) {
-        return user.createAccount(accountType);
+    public BigDecimal checkBalance(Account account) {
+        return account.getBalance();
     }
 
-    public Account getAccount(User user, AccountType accountType) {
-        return user.getAccount(accountType);
+    public void deposit(Account account, BigDecimal amount) {
+        account.setBalance(account.getBalance().add(amount));
+        accountRepository.save(account);
+
+        Transaction transaction = new Transaction(account, TransactionType.DEPOSIT, amount);
+        transactionRepository.save(transaction);
     }
 
-    public Optional<Account> findAccountByAccountNumber(String accountNumber) {
-        return accountRepository.findAccountByAccountNumber(accountNumber);
+    public void withdraw(Account account, BigDecimal amount) {
+        if (account.getBalance().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Insufficient balance for withdrawal");
+        }
+
+        account.setBalance(account.getBalance().subtract(amount));
+        accountRepository.save(account);
+
+        Transaction transaction = new Transaction(account, TransactionType.WITHDRAWAL, amount);
+        transactionRepository.save(transaction);
     }
 
-    public void deleteAccount(Account account) {
-        accountRepository.delete(account);
+    public void transfer(Account sourceAccount, Account destinationAccount, BigDecimal amount) {
+        withdraw(sourceAccount, amount);
+        deposit(destinationAccount, amount);
+
+        Transaction transaction = new Transaction(sourceAccount, TransactionType.TRANSFER, amount, destinationAccount);
+        transactionRepository.save(transaction);
+    }
+
+    public void close() {
+        accountRepository.close();
+        transactionRepository.close();
     }
 }

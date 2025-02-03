@@ -5,6 +5,8 @@ import br.com.compass.repository.UserRepository;
 import br.com.compass.service.validation.CPFValidator;
 import br.com.compass.service.validation.PasswordValidator;
 
+import java.util.Optional;
+
 public class AuthService {
 
     private CPFValidator cpfValidator;
@@ -18,28 +20,30 @@ public class AuthService {
     }
 
     public void registerUser(User user) {
-        validateUser(user.getCpf(), user.getPassword());
+        cpfValidator.validate(user.getCpf());
+        passwordValidator.validate(user.getPassword());
         userRepository.save(user);
         System.out.println("User successfully registered!");
     }
 
-    public void loginUser(String cpf, String password) {
-        User user = userRepository.findByCpf(cpf);
-        if (user == null) {
+    public Optional<User> loginUser(String cpf, String password) {
+        Optional<User> user = userRepository.findByCpf(cpf);
+        if (user.isEmpty()) {
             System.out.println("User not found!");
-            return;
+            return Optional.empty();
         }
 
         passwordValidator.validate(password);
-        if (user.getPassword().equals(password)) {
-            System.out.println("Login bem-sucedido!");
+        if (user.get().getPassword().equals(password)) {
+            System.out.println("Successful login!");
+            return user;
         } else {
-            System.out.println("Senha incorreta!");
+            System.out.println("Incorrect password!");
+            return Optional.empty();
         }
     }
 
-    private void validateUser(User user, String password) {
-        cpfValidator.validate(user.getCpf());
-        passwordValidator.validate(password);
+    public void close() {
+        userRepository.close();
     }
 }

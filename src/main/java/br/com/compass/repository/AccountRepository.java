@@ -1,30 +1,35 @@
 package br.com.compass.repository;
 
 import br.com.compass.entity.Account;
+import br.com.compass.entity.User;
+import br.com.compass.entity.enums.AccountType;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import java.util.Optional;
 
 public class AccountRepository extends RepoFactory<Account> {
 
-    private EntityManager entityManager;
-
-    public AccountRepository(EntityManager entityManager) {
-        super();
-        this.entityManager = entityManager;
-    }
-    
-    public Optional<Account> findAccountByAccountNumber(String accountNumber) {
-        String queryStr = "SELECT a FROM Account a WHERE a.accountNumber = :accountNumber";
-        Query query = entityManager.createQuery(queryStr);
-        query.setParameter("accountNumber", accountNumber);
-
+    public Optional<Account> findByAccountNumber(String accountNumber) {
         try {
-            Account account = (Account) query.getSingleResult();
-            return Optional.of(account);
-        } catch (Exception e) {
-            return Optional.empty(); // Caso não encontre, retorna um Optional vazio
+            TypedQuery<Account> query = getEntityManager().createQuery(
+                    "SELECT a FROM Account a WHERE a.accountNumber = :accountNumber", Account.class);
+            query.setParameter("accountNumber", accountNumber);
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Account> findByUserAndType(User user, AccountType type) {
+        try {
+            TypedQuery<Account> query = getEntityManager().createQuery(
+                    "SELECT a FROM Account a WHERE a.user = :user AND a.accountType = :type", Account.class);
+            query.setParameter("user", user);
+            query.setParameter("type", type);
+            return Optional.ofNullable(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 }
