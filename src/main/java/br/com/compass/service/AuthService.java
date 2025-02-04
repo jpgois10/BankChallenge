@@ -13,18 +13,10 @@ public class AuthService {
     private PasswordValidator passwordValidator;
     private UserRepository userRepository;
 
-    public AuthService(CPFValidator cpfValidator, PasswordValidator passwordValidator, UserRepository userRepository) {
-        this.cpfValidator = cpfValidator;
-        this.passwordValidator = passwordValidator;
+    public AuthService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public void registerUser(User user) {
-        cpfValidator.validate(user.getCpf());
-        passwordValidator.validate(user.getPassword());
-        userRepository.save(user);
-        System.out.println("User successfully registered!");
-    }
 
     public Optional<User> loginUser(String cpf, String password) {
         Optional<User> user = userRepository.findByCpf(cpf);
@@ -34,13 +26,12 @@ public class AuthService {
         }
 
         passwordValidator.validate(password);
-        if (user.get().getPassword().equals(password)) {
-            System.out.println("Successful login!");
-            return user;
-        } else {
-            System.out.println("Incorrect password!");
-            return Optional.empty();
+        if (!user.get().getPassword().equals(password)) {
+            throw new IncorrectPasswordException("Incorrect password!");
         }
+
+        System.out.println("Successful login!");
+        return user.get();
     }
 
     public void close() {

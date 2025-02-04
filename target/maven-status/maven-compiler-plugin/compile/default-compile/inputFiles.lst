@@ -1,7 +1,15 @@
 C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\enums\AccountType.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\service\AccountService.java
 C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\Account.java
-C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\enums\TransactionType.java
-C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\App.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\repository\RepoFactory.java
 C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\Transaction.java
 C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\util\HibernateUtil.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\service\AuthService.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\service\validation\PasswordValidator.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\repository\UserRepository.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\repository\AccountRepository.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\enums\TransactionType.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\repository\TransactionRepository.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\App.java
+C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\service\validation\CPFValidator.java
 C:\Users\utente\Desktop\Compass Uol\Desafio 2\BankChallenge\src\main\java\br\com\compass\entity\User.java
