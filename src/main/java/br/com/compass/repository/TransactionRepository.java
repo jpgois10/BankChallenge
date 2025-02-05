@@ -6,7 +6,7 @@ import jakarta.persistence.TypedQuery;
 
 import java.util.List;
 
-public class TransactionRepository extends RepoFactory<Transaction> {
+public class TransactionRepository extends RepositoryFactory<Transaction> {
 
     public List<Transaction> findByAccount(Account account) {
         TypedQuery<Transaction> query = getEntityManager().createQuery(

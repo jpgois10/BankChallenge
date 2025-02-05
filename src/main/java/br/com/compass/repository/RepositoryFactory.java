@@ -7,10 +7,10 @@ import jakarta.persistence.Persistence;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class RepoFactory<T> {
+public abstract class RepositoryFactory<T> {
     private final EntityManager entityManager;
 
-    public RepoFactory() {
+    public RepositoryFactory() {
         this.entityManager = Persistence.createEntityManagerFactory("bankChallengePU").createEntityManager();
     }
 
