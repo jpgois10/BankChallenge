@@ -1,13 +1,12 @@
 package br.com.compass.repository;
 
 import br.com.compass.entity.User;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 
 import java.util.Optional;
 
-public class UserRepository extends RepoFactory<User> {
+public class UserRepository extends RepositoryFactory<User> {
 
     public Optional<User> findByCpf(String cpf) {
         try {

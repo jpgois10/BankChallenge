@@ -3,11 +3,15 @@ package br.com.compass.service;
 import br.com.compass.entity.Account;
 import br.com.compass.entity.Transaction;
 import br.com.compass.entity.enums.TransactionType;
+import br.com.compass.exception.InsufficientFundsException;
+import br.com.compass.exception.InvalidAccountException;
+import br.com.compass.exception.InvalidTransactionException;
 import br.com.compass.repository.AccountRepository;
 import br.com.compass.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public class AccountService {
     private AccountRepository accountRepository;
@@ -29,7 +33,7 @@ public class AccountService {
 
     public void deposit(Account account, BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
-            throw new IllegalArgumentException("The deposit value must be greater than zero");
+            throw new InvalidTransactionException("The deposit value must be greater than zero");
         }
 
         account.setBalance(account.getBalance().add(amount));
@@ -41,10 +45,10 @@ public class AccountService {
 
     public void withdraw(Account account, BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
-            throw new IllegalArgumentException("The withdrawal value must be greater than zero");
+            throw new InvalidTransactionException("The withdrawal value must be greater than zero");
         }
         if (account.getBalance().compareTo(amount) < 0.00) {
-            throw new IllegalArgumentException("Insufficient balance for withdrawal");
+            throw new InsufficientFundsException("Insufficient balance for withdrawal");
         }
 
         account.setBalance(account.getBalance().subtract(amount));
@@ -54,12 +58,20 @@ public class AccountService {
         transactionRepository.save(transaction);
     }
 
+    public Account findAccountByNumber(String accountNumber) throws InvalidAccountException {
+        Optional<Account> accountOptional = accountRepository.findByAccountNumber(accountNumber);
+        if (accountOptional.isEmpty()) {
+            throw new InvalidAccountException("Account not found with number: " + accountNumber);
+        }
+        return accountOptional.get();
+    }
+
     public void transfer(Account sourceAccount, Account destinationAccount, BigDecimal amount) {
         if (amount.compareTo(BigDecimal.ZERO) <= 0.00) {
-            throw new IllegalArgumentException("The transfer value must be greater than zero");
+            throw new InvalidTransactionException("The transfer value must be greater than zero");
         }
         if (sourceAccount.getBalance().compareTo(amount) < 0) {
-            throw new IllegalArgumentException("Insufficient balance to complete the transfer.");
+            throw new InsufficientFundsException("Insufficient balance to complete the transfer.");
         }
 
         withdraw(sourceAccount, amount);
