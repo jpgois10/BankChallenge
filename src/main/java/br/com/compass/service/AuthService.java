@@ -1,6 +1,8 @@
 package br.com.compass.service;
 
 import br.com.compass.entity.User;
+import br.com.compass.exception.IncorrectPasswordException;
+import br.com.compass.exception.UserNotFoundException;
 import br.com.compass.repository.UserRepository;
 import br.com.compass.service.validation.CPFValidator;
 import br.com.compass.service.validation.PasswordValidator;
@@ -18,11 +20,10 @@ public class AuthService {
     }
 
 
-    public Optional<User> loginUser(String cpf, String password) {
+    public User loginUser(String cpf, String password) {
         Optional<User> user = userRepository.findByCpf(cpf);
         if (user.isEmpty()) {
-            System.out.println("User not found!");
-            return Optional.empty();
+            throw new UserNotFoundException("User not found!");
         }
 
         passwordValidator.validate(password);
