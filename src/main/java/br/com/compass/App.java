@@ -1,96 +1,41 @@
 package br.com.compass;
 
+import br.com.compass.controller.AccountController;
+import br.com.compass.controller.UserController;
+import br.com.compass.model.repository.UserRepository;
+import br.com.compass.service.AccountService;
+import br.com.compass.service.AuthService;
+import br.com.compass.service.UserService;
+import br.com.compass.service.validation.CPFValidator;
+import br.com.compass.service.validation.PasswordValidator;
+import br.com.compass.util.HibernateUtil;
+import br.com.compass.view.UserView;
+
 import java.util.Locale;
 import java.util.Scanner;
 
 public class App {
-    
     public static void main(String[] args) {
         Locale.setDefault(Locale.US);
         Scanner scanner = new Scanner(System.in);
 
-        mainMenu(scanner);
-        
-        scanner.close();
-        System.out.println("Application closed");
-    }
+        UserRepository userRepository = new UserRepository();
+        CPFValidator cpfValidator = new CPFValidator();
+        PasswordValidator passwordValidator = new PasswordValidator();
+        AccountService accountService = new AccountService();
 
-    public static void mainMenu(Scanner scanner) {
-        boolean running = true;
+        AuthService authService = new AuthService(userRepository);
+        UserService userService = new UserService(userRepository, cpfValidator, passwordValidator);
+        AccountController accountController = new AccountController(accountService);
+        UserController userController = new UserController(authService, userService, accountController);
+        UserView userView = new UserView(userController, scanner);
 
-        while (running) {
-            System.out.println("========= Main Menu =========");
-            System.out.println("|| 1. Login                ||");
-            System.out.println("|| 2. Account Opening      ||");
-            System.out.println("|| 0. Exit                 ||");
-            System.out.println("=============================");
-            System.out.print("Choose an option: ");
-
-            int option = scanner.nextInt();
-
-            switch (option) {
-                case 1:
-                    bankMenu(scanner);
-                    return;
-                case 2:
-                    // ToDo...
-                    System.out.println("Account Opening.");
-                    break;
-                case 0:
-                    running = false;
-                    break;
-                default:
-                    System.out.println("Invalid option! Please try again.");
-            }
+        try {
+            userView.showUserMenu();
+        } finally {
+            scanner.close();
+            HibernateUtil.closeEntityManagerFactory();
+            System.out.println("Application closed.");
         }
     }
-
-    public static void bankMenu(Scanner scanner) {
-        boolean running = true;
-
-        while (running) {
-            System.out.println("========= Bank Menu =========");
-            System.out.println("|| 1. Deposit              ||");
-            System.out.println("|| 2. Withdraw             ||");
-            System.out.println("|| 3. Check Balance        ||");
-            System.out.println("|| 4. Transfer             ||");
-            System.out.println("|| 5. Bank Statement       ||");
-            System.out.println("|| 0. Exit                 ||");
-            System.out.println("=============================");
-            System.out.print("Choose an option: ");
-
-            int option = scanner.nextInt();
-
-            switch (option) {
-                case 1:
-                    // ToDo...
-                    System.out.println("Deposit.");
-                    break;
-                case 2:
-                    // ToDo...
-                    System.out.println("Withdraw.");
-                    break;
-                case 3:
-                    // ToDo...
-                    System.out.println("Check Balance.");
-                    break;
-                case 4:
-                    // ToDo...
-                    System.out.println("Transfer.");
-                    break;
-                case 5:
-                    // ToDo...
-                    System.out.println("Bank Statement.");
-                    break;
-                case 0:
-                    // ToDo...
-                    System.out.println("Exiting...");
-                    running = false;
-                    return;
-                default:
-                    System.out.println("Invalid option! Please try again.");
-            }
-        }
-    }
-    
 }

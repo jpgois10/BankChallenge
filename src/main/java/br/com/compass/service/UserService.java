@@ -22,6 +22,9 @@ public class UserService {
     public void registerUser(User user) {
         CPFValidator.validate(user.getCpf());
         PasswordValidator.validate(user.getPassword());
+        if (userRepository.findByCpf(user.getCpf()).isPresent()) {
+            throw new IllegalArgumentException("CPF already registered.");
+        }
         userRepository.save(user);
         System.out.println("User successfully registered!");
     }
