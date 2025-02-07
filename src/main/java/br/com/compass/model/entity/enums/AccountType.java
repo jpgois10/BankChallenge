@@ -1,4 +1,4 @@
-package br.com.compass.entity.enums;
+package br.com.compass.model.entity.enums;
 
 public enum AccountType {
     CHECKING(11, "Checking"),

@@ -1,6 +1,6 @@
 package br.com.compass.service.validation;
 
-import br.com.compass.entity.enums.AccountType;
+import br.com.compass.model.entity.enums.AccountType;
 import br.com.compass.exception.DuplicateAccountException;
 import br.com.compass.service.UserService;
 

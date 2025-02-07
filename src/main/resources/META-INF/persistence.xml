@@ -6,9 +6,9 @@
     <persistence-unit name="bankChallengePU" transaction-type="RESOURCE_LOCAL">
 
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>br.com.compass.entity.User</class>
-        <class>br.com.compass.entity.Account</class>
-        <class>br.com.compass.entity.Transaction</class>
+        <class>br.com.compass.model.entity.User</class>
+        <class>br.com.compass.model.entity.Account</class>
+        <class>br.com.compass.model.entity.Transaction</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>

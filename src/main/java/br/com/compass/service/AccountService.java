@@ -1,13 +1,13 @@
 package br.com.compass.service;
 
-import br.com.compass.entity.Account;
-import br.com.compass.entity.Transaction;
-import br.com.compass.entity.enums.TransactionType;
+import br.com.compass.model.entity.Account;
+import br.com.compass.model.entity.Transaction;
+import br.com.compass.model.entity.enums.TransactionType;
 import br.com.compass.exception.InsufficientFundsException;
 import br.com.compass.exception.InvalidAccountException;
 import br.com.compass.exception.InvalidTransactionException;
-import br.com.compass.repository.AccountRepository;
-import br.com.compass.repository.TransactionRepository;
+import br.com.compass.model.repository.AccountRepository;
+import br.com.compass.model.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.util.List;

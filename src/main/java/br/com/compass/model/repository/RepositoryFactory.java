@@ -1,4 +1,4 @@
-package br.com.compass.repository;
+package br.com.compass.model.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;

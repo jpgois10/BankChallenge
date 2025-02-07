@@ -1,7 +1,7 @@
-package br.com.compass.repository;
+package br.com.compass.model.repository;
 
-import br.com.compass.entity.Account;
-import br.com.compass.entity.Transaction;
+import br.com.compass.model.entity.Account;
+import br.com.compass.model.entity.Transaction;
 import jakarta.persistence.TypedQuery;
 
 import java.util.List;

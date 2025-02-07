@@ -1,9 +1,9 @@
 package br.com.compass.view;
 
 import br.com.compass.controller.AccountController;
-import br.com.compass.entity.Account;
-import br.com.compass.entity.Transaction;
-import br.com.compass.entity.enums.TransactionType;
+import br.com.compass.model.entity.Account;
+import br.com.compass.model.entity.Transaction;
+import br.com.compass.model.entity.enums.TransactionType;
 import br.com.compass.exception.InsufficientFundsException;
 import br.com.compass.exception.InvalidAccountException;
 
