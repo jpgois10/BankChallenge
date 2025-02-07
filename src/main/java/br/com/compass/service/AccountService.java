@@ -2,6 +2,7 @@ package br.com.compass.service;
 
 import br.com.compass.model.entity.Account;
 import br.com.compass.model.entity.Transaction;
+import br.com.compass.model.entity.User;
 import br.com.compass.model.entity.enums.TransactionType;
 import br.com.compass.exception.InsufficientFundsException;
 import br.com.compass.exception.InvalidAccountException;
@@ -14,8 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class AccountService {
-    private AccountRepository accountRepository;
-    private TransactionRepository transactionRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
     public AccountService() {
         this.accountRepository = new AccountRepository();
@@ -25,6 +26,10 @@ public class AccountService {
     public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+    }
+
+    public void createAccount(User user, Account account) {
+        accountRepository.save(account);
     }
 
     public BigDecimal checkBalance(Account account) {

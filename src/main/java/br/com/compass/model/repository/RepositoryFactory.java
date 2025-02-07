@@ -16,16 +16,22 @@ public abstract class RepositoryFactory<T> {
 
     public void save(T entity) {
         EntityTransaction transaction = entityManager.getTransaction();
+        boolean isNewTransaction = !transaction.isActive();
+
         try {
-            transaction.begin();
+            if (isNewTransaction) {
+                transaction.begin();
+            }
             if (entityManager.contains(entity)) {
                 entityManager.merge(entity);
             } else {
                 entityManager.persist(entity);
             }
-            transaction.commit();
+            if (isNewTransaction) {
+                transaction.commit();
+            }
         } catch (RuntimeException e) {
-            if (transaction.isActive()) {
+            if (isNewTransaction) {
                 transaction.rollback();
             }
             throw new RuntimeException("Failed to save entity: " + e.getMessage(), e);
@@ -51,6 +57,22 @@ public abstract class RepositoryFactory<T> {
         } catch (RuntimeException e) {
             transaction.rollback();
             throw e;
+        }
+    }
+
+    public EntityTransaction beginTransaction() {
+        EntityTransaction transaction = getEntityManager().getTransaction();
+        transaction.begin();
+        return transaction;
+    }
+
+    public void commitTransaction(EntityTransaction transaction) {
+        transaction.commit();
+    }
+
+    public void rollbackTransaction(EntityTransaction transaction) {
+        if (transaction.isActive()) {
+            transaction.rollback();
         }
     }
 

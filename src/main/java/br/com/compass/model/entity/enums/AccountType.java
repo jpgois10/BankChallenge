@@ -30,4 +30,14 @@ public enum AccountType {
         }
         return null;
     }
+
+    public static AccountType fromString(String value) {
+        for (AccountType type : values()) {
+            if (type.name().equalsIgnoreCase(value)) { // Compara ignorando maiúsculas/minúsculas
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant for value: " + value);
+    }
+
 }

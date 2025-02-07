@@ -35,4 +35,8 @@ public class AccountRepository extends RepositoryFactory<Account> {
             return Optional.empty();
         }
     }
+
+    public void save(Account account) {
+        super.save(account);
+    }
 }
