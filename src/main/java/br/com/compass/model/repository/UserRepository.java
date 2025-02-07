@@ -1,6 +1,6 @@
-package br.com.compass.repository;
+package br.com.compass.model.repository;
 
-import br.com.compass.entity.User;
+import br.com.compass.model.entity.User;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 

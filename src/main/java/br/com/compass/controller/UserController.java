@@ -1,8 +1,8 @@
 package br.com.compass.controller;
 
-import br.com.compass.entity.Account;
-import br.com.compass.entity.User;
-import br.com.compass.entity.enums.AccountType;
+import br.com.compass.model.entity.Account;
+import br.com.compass.model.entity.User;
+import br.com.compass.model.entity.enums.AccountType;
 import br.com.compass.exception.DuplicateAccountException;
 import br.com.compass.exception.IncorrectPasswordException;
 import br.com.compass.exception.UserNotFoundException;

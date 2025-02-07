@@ -1,17 +1,15 @@
 package br.com.compass.view;
 
 import br.com.compass.controller.UserController;
-import br.com.compass.entity.Account;
-import br.com.compass.entity.User;
-import br.com.compass.entity.enums.AccountType;
+import br.com.compass.model.entity.Account;
+import br.com.compass.model.entity.User;
+import br.com.compass.model.entity.enums.AccountType;
 import br.com.compass.exception.DuplicateAccountException;
 import br.com.compass.exception.IncorrectPasswordException;
 import br.com.compass.exception.UserNotFoundException;
-import br.com.compass.service.UserService;
 import br.com.compass.service.validation.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -145,13 +143,6 @@ public class UserView {
         }
     }
 
-    private Set<AccountType> getAvailableAccountTypes(String cpf) {
-        Set<AccountType> existingAccountTypes = userController.getUserAccountTypes(cpf);
-        return Set.of(AccountType.values()).stream()
-                .filter(type -> !existingAccountTypes.contains(type))
-                .collect(Collectors.toSet());
-    }
-
     private String getValidName() {
         while (true) {
             System.out.print("Name: ");
@@ -214,6 +205,13 @@ public class UserView {
                 System.out.println("Error: " + e.getMessage());
             }
         }
+    }
+
+    private Set<AccountType> getAvailableAccountTypes(String cpf) {
+        Set<AccountType> existingAccountTypes = userController.getUserAccountTypes(cpf);
+        return Set.of(AccountType.values()).stream()
+                .filter(type -> !existingAccountTypes.contains(type))
+                .collect(Collectors.toSet());
     }
 
     private int getValidAccountTypeCode(Set<AccountType> availableAccountTypes) {

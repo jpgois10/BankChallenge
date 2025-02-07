@@ -1,7 +1,7 @@
 package br.com.compass.controller;
 
-import br.com.compass.entity.Account;
-import br.com.compass.entity.Transaction;
+import br.com.compass.model.entity.Account;
+import br.com.compass.model.entity.Transaction;
 import br.com.compass.exception.InvalidAccountException;
 import br.com.compass.service.AccountService;
 

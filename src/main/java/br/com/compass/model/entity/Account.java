@@ -1,6 +1,6 @@
-package br.com.compass.entity;
+package br.com.compass.model.entity;
 
-import br.com.compass.entity.enums.AccountType;
+import br.com.compass.model.entity.enums.AccountType;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
