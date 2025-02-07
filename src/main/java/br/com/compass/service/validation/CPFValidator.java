@@ -6,7 +6,7 @@ public class CPFValidator {
 
     private static final Pattern CPF_PATTERN = Pattern.compile("^[0-9]{11}$");
 
-    public void validate(String cpf) {
+    public static void validate(String cpf) {
         if (!CPF_PATTERN.matcher(cpf).matches()) {
             throw new IllegalArgumentException("Invalid CPF format");
         }
