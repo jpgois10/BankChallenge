@@ -9,6 +9,9 @@ import jakarta.persistence.TypedQuery;
 import java.util.Optional;
 
 public class AccountRepository extends RepositoryFactory<Account> {
+    public AccountRepository() {
+        super();
+    }
 
     public Optional<Account> findByAccountNumber(String accountNumber) {
         try {

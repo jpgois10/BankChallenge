@@ -8,6 +8,7 @@ import br.com.compass.exception.IncorrectPasswordException;
 import br.com.compass.exception.UserNotFoundException;
 import br.com.compass.service.AuthService;
 import br.com.compass.service.UserService;
+import br.com.compass.service.validation.AccountTypeValidator;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -23,18 +24,16 @@ public class UserController {
         this.accountController = accountController;
     }
 
-    public void registerUser(String name, String birthDateStr, String cpf, String phoneNumber, String password) {
-        LocalDate birthDate = LocalDate.parse(birthDateStr, java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        User user = new User(name, birthDate, cpf, phoneNumber, password);
+    public void registerUser(User user) {
         userService.registerUser(user);
     }
-
 
     public User loginUser(String cpf, String password) throws UserNotFoundException, IncorrectPasswordException {
         return authService.loginUser(cpf, password);
     }
 
     public Account createAccount(User user, AccountType accountType) throws DuplicateAccountException {
+        AccountTypeValidator.validate(userService, user.getCpf(), accountType.getCode());
         return userService.createAccount(user, accountType);
     }
 

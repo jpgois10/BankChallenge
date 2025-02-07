@@ -48,7 +48,7 @@ public class User implements Serializable {
         this.birthDate = birthDate;
         this.cpf = cpf;
         this.phoneNumber = phoneNumber;
-        setPassword(password);
+        this.password = password;
     }
 
     public Integer getId() {

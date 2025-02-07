@@ -25,8 +25,10 @@ public abstract class RepositoryFactory<T> {
             }
             transaction.commit();
         } catch (RuntimeException e) {
-            transaction.rollback();
-            throw e;
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            throw new RuntimeException("Failed to save entity: " + e.getMessage(), e);
         }
     }
 

@@ -1,6 +1,7 @@
 package br.com.compass.view;
 
 import br.com.compass.controller.UserController;
+import br.com.compass.exception.InvalidUserDataException;
 import br.com.compass.model.entity.Account;
 import br.com.compass.model.entity.User;
 import br.com.compass.model.entity.enums.AccountType;
@@ -10,19 +11,16 @@ import br.com.compass.exception.UserNotFoundException;
 import br.com.compass.service.validation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class UserView {
     private final UserController userController;
     private final Scanner scanner;
 
-    public UserView(UserController userController) {
+    public UserView(UserController userController, Scanner scanner) {
         this.userController = userController;
-        this.scanner = new Scanner(System.in);
+        this.scanner = scanner;
     }
 
     public void showUserMenu() {
@@ -119,19 +117,27 @@ public class UserView {
         String phoneNumber = getValidPhoneNumber();
         String password = getValidPassword();
 
+        User user = new User(name, birthDate, cpf, phoneNumber, password);
+
+        try {
+            userController.registerUser(user);
+        } catch (InvalidUserDataException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
         Set<AccountType> availableAccountTypes = getAvailableAccountTypes(cpf);
         if (availableAccountTypes.isEmpty()) {
             System.out.println("You already have all types of accounts.");
             return;
         }
 
-        System.out.println("Choose the account type:");
-        availableAccountTypes.forEach(type -> System.out.println(type.getCode() + " - " + type));
+        System.out.println("\nChoose the account type:");
+        availableAccountTypes.stream().sorted(Comparator.comparingInt(AccountType::getCode)).forEach(type -> System.out.println(type.getCode() + " - " + type));
         int accountTypeCode = getValidAccountTypeCode(availableAccountTypes);
         AccountType accountType = AccountType.fromCode(accountTypeCode);
 
         try {
-            User user = new User(name, birthDate, cpf, phoneNumber, password);
+            userController.registerUser(user);
             Account account = userController.createAccount(user, accountType);
             System.out.println("\nAccount opened successfully!");
             System.out.println("Name: " + user.getName());
@@ -158,7 +164,7 @@ public class UserView {
 
     private LocalDate getValidBirthDate() {
         while (true) {
-            System.out.print("Birth Date (dd/MM/yyyy): ");
+            System.out.print("Birth Date (DD/MM/YYYY): ");
             String birthDateStr = scanner.nextLine();
             try {
                 return BirthDateValidator.validate(birthDateStr);
@@ -170,7 +176,7 @@ public class UserView {
 
     private String getValidCPF() {
         while (true) {
-            System.out.print("CPF: ");
+            System.out.print("CPF (11 numbers): ");
             String cpf = scanner.nextLine();
             try {
                 CPFValidator.validate(cpf);
@@ -183,7 +189,7 @@ public class UserView {
 
     private String getValidPhoneNumber() {
         while (true) {
-            System.out.print("Phone Number: ");
+            System.out.print("Phone Number (11 numbers): ");
             String phoneNumber = scanner.nextLine();
             try {
                 PhoneNumberValidator.validate(phoneNumber);
@@ -209,7 +215,7 @@ public class UserView {
 
     private Set<AccountType> getAvailableAccountTypes(String cpf) {
         Set<AccountType> existingAccountTypes = userController.getUserAccountTypes(cpf);
-        return Set.of(AccountType.values()).stream()
+        return Arrays.stream(AccountType.values())
                 .filter(type -> !existingAccountTypes.contains(type))
                 .collect(Collectors.toSet());
     }

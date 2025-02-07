@@ -8,6 +8,14 @@ import java.util.Optional;
 
 public class UserRepository extends RepositoryFactory<User> {
 
+    public UserRepository() {
+        super();
+    }
+
+    public void save(User user) {
+        super.save(user);
+    }
+
     public Optional<User> findByCpf(String cpf) {
         try {
             TypedQuery<User> query = getEntityManager().createQuery(
