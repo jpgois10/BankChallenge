@@ -8,9 +8,7 @@ import br.com.compass.exception.DuplicateAccountException;
 import br.com.compass.exception.IncorrectPasswordException;
 import br.com.compass.exception.UserNotFoundException;
 import br.com.compass.service.UserService;
-import br.com.compass.service.validation.CPFValidator;
-import br.com.compass.service.validation.PasswordValidator;
-import br.com.compass.service.validation.PhoneNumberValidator;
+import br.com.compass.service.validation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
