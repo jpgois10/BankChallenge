@@ -71,7 +71,7 @@ public class AccountView {
         try {
             accountController.deposit(account, amount);
             System.out.println("Deposit successful!");
-            System.out.println("Updated Balance: " + account.getBalance());
+            System.out.println("Updated Balance: " + String.format("%.2f",account.getBalance()));
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -85,7 +85,7 @@ public class AccountView {
         try {
             accountController.withdraw(account, amount);
             System.out.println("Withdrawal successful!");
-            System.out.println("Updated Balance: " + account.getBalance());
+            System.out.println("Updated Balance: " + String.format("%.2f",account.getBalance()));
         } catch (InsufficientFundsException | IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -93,7 +93,7 @@ public class AccountView {
 
     private void checkBalance(Account account) {
         System.out.println("\n=== Account Balance ===");
-        System.out.println("Current Balance: " + account.getBalance());
+        System.out.println("Current Balance: " + String.format("%.2f",account.getBalance()));
     }
 
     private void transfer(Account sourceAccount) {
@@ -107,7 +107,7 @@ public class AccountView {
         try {
             accountController.transfer(sourceAccount, destinationAccountNumber, amount);
             System.out.println("Transfer successful!");
-            System.out.println("Updated Balance: " + sourceAccount.getBalance());
+            System.out.println("Updated Balance: " + String.format("%.2f",sourceAccount.getBalance()));
         } catch (InvalidAccountException | InsufficientFundsException | IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -129,7 +129,7 @@ public class AccountView {
             if (transaction.getTransactionType() == TransactionType.TRANSFER) {
                 System.out.println("Destination Account: " + transaction.getTransferDestinationAccount().getAccountNumber());
             }
-            System.out.println("Amount: " + transaction.getAmount());
+            System.out.println("Amount: " + String.format("%.2f",transaction.getAmount()));
             System.out.println("-----------------------------");
         }
     }

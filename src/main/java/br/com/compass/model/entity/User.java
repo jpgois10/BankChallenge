@@ -125,10 +125,17 @@ public class User implements Serializable {
                         "User does not have a " + type + " account"));
     }
 
+//    public void addAccount(Account account) {
+//        accounts.add(account);
+//        account.setUser(this);
+//    }
     public void addAccount(Account account) {
-        accounts.add(account);
-        account.setUser(this);
+        if (this.accounts == null) {
+            this.accounts = new HashSet<>();
+        }
+        this.accounts.add(account);
     }
+
 
     @Override
     public boolean equals(Object o) {

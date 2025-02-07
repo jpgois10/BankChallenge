@@ -27,7 +27,7 @@ public class App {
         AuthService authService = new AuthService(userRepository);
         UserService userService = new UserService(userRepository, cpfValidator, passwordValidator);
         AccountController accountController = new AccountController(accountService);
-        UserController userController = new UserController(authService, userService, accountController);
+        UserController userController = new UserController(authService, userService, accountService, accountController);
         UserView userView = new UserView(userController, scanner);
 
         try {

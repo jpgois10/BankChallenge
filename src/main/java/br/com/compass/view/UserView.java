@@ -8,11 +8,14 @@ import br.com.compass.model.entity.enums.AccountType;
 import br.com.compass.exception.DuplicateAccountException;
 import br.com.compass.exception.IncorrectPasswordException;
 import br.com.compass.exception.UserNotFoundException;
+import br.com.compass.model.repository.UserRepository;
 import br.com.compass.service.validation.*;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static br.com.compass.service.validation.CPFValidator.validate;
 
 public class UserView {
     private final UserController userController;
@@ -69,16 +72,10 @@ public class UserView {
                 System.out.println("Login successful! Welcome, " + loggedInUser.getName() + ".");
 
                 Set<Account> accounts = loggedInUser.getAccounts();
+
                 if (accounts.isEmpty()) {
-                    System.out.println("No accounts found. Creating a default Checking account...");
-                    try {
-                        Account account = userController.createAccount(loggedInUser, AccountType.CHECKING);
-                        System.out.println("Account created successfully!");
-                        System.out.println("Account Number: " + account.getAccountNumber());
-                        accounts = loggedInUser.getAccounts();
-                    } catch (DuplicateAccountException e) {
-                        System.out.println("Error: " + e.getMessage());
-                    }
+                    System.out.println("No accounts found for this user. Please create an account first.");
+                    return; // Sai do login se não houver contas
                 }
 
                 List<Account> accountList = new ArrayList<>(accounts);
@@ -96,17 +93,17 @@ public class UserView {
                     Account account = accountList.get(choice - 1);
                     AccountView accountView = new AccountView(userController.getAccountController());
                     accountView.showBankMenu(account);
+                    return; // Sai do loop após abrir o menu bancário
                 } else {
                     System.out.println("Invalid choice.");
                 }
-
-                break;
             } catch (UserNotFoundException | IncorrectPasswordException e) {
                 System.out.println("Error: " + e.getMessage());
                 System.out.println("Please try again.");
             }
         }
     }
+
 
     private void openAccount() {
         System.out.println("\n=== Account Opening ===");
@@ -119,33 +116,28 @@ public class UserView {
 
         User user = new User(name, birthDate, cpf, phoneNumber, password);
 
-        try {
-            userController.registerUser(user);
-        } catch (InvalidUserDataException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
-        Set<AccountType> availableAccountTypes = getAvailableAccountTypes(cpf);
-        if (availableAccountTypes.isEmpty()) {
-            System.out.println("You already have all types of accounts.");
-            return;
-        }
 
         System.out.println("\nChoose the account type:");
-        availableAccountTypes.stream().sorted(Comparator.comparingInt(AccountType::getCode)).forEach(type -> System.out.println(type.getCode() + " - " + type));
-        int accountTypeCode = getValidAccountTypeCode(availableAccountTypes);
+        Arrays.stream(AccountType.values())
+                .sorted(Comparator.comparingInt(AccountType::getCode))
+                .forEach(type -> System.out.println(type.getCode() + " - " + type));
+
+        int accountTypeCode = getValidAccountTypeCode();
         AccountType accountType = AccountType.fromCode(accountTypeCode);
 
         try {
-            userController.registerUser(user);
-            Account account = userController.createAccount(user, accountType);
+//            userController.registerUser(user);
+//            Account account = userController.createAccount(user, accountType);
+            userController.registerUserAndCreateAccount(user, accountType);
             System.out.println("\nAccount opened successfully!");
             System.out.println("Name: " + user.getName());
-            System.out.println("Account Number: " + account.getAccountNumber());
-            System.out.println("Account Type: " + account.getAccountType());
-            System.out.println("Initial Balance: " + account.getBalance());
+            System.out.println("Account Number: " + user.getAccounts().iterator().next().getAccountNumber());
+            System.out.println("Account Type: " + accountType);
+            System.out.println("Initial Balance: " + String.format("%.2f", user.getAccounts().iterator().next().getBalance()));
         } catch (DuplicateAccountException e) {
             System.out.println("Error: " + e.getMessage());
+        } catch (InvalidUserDataException e) {
+            System.out.println("User and account creation failed. No data was saved.");
         }
     }
 
@@ -175,11 +167,18 @@ public class UserView {
     }
 
     private String getValidCPF() {
+        UserRepository userRepository = new UserRepository();
+
         while (true) {
             System.out.print("CPF (11 numbers): ");
             String cpf = scanner.nextLine();
             try {
-                CPFValidator.validate(cpf);
+                validate(cpf);
+
+                if (userRepository.findByCpf(cpf).isPresent()) {
+                    System.out.println("Error: CPF already registered.");
+                    continue;
+                }
                 return cpf;
             } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
@@ -215,17 +214,19 @@ public class UserView {
 
     private Set<AccountType> getAvailableAccountTypes(String cpf) {
         Set<AccountType> existingAccountTypes = userController.getUserAccountTypes(cpf);
+
+
         return Arrays.stream(AccountType.values())
                 .filter(type -> !existingAccountTypes.contains(type))
                 .collect(Collectors.toSet());
     }
 
-    private int getValidAccountTypeCode(Set<AccountType> availableAccountTypes) {
+    private int getValidAccountTypeCode() {
         while (true) {
             System.out.print("Enter the account type code: ");
             try {
                 int accountTypeCode = Integer.parseInt(scanner.nextLine());
-                if (availableAccountTypes.stream().anyMatch(type -> type.getCode() == accountTypeCode)) {
+                if (Arrays.stream(AccountType.values()).anyMatch(type -> type.getCode() == accountTypeCode)) {
                     return accountTypeCode;
                 }
                 System.out.println("Invalid account type. Please choose from the available options.");
@@ -234,4 +235,19 @@ public class UserView {
             }
         }
     }
+
+//    private int getValidAccountTypeCode(Set<AccountType> availableAccountTypes) {
+//        while (true) {
+//            System.out.print("Enter the account type code: ");
+//            try {
+//                int accountTypeCode = Integer.parseInt(scanner.nextLine());
+//                if (availableAccountTypes.stream().anyMatch(type -> type.getCode() == accountTypeCode)) {
+//                    return accountTypeCode;
+//                }
+//                System.out.println("Invalid account type. Please choose from the available options.");
+//            } catch (NumberFormatException e) {
+//                System.out.println("Invalid input. Please enter a number.");
+//            }
+//        }
+//    }
 }
