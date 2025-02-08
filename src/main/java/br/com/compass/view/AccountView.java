@@ -1,6 +1,7 @@
 package br.com.compass.view;
 
 import br.com.compass.controller.AccountController;
+import br.com.compass.exception.InvalidTransactionException;
 import br.com.compass.model.entity.Account;
 import br.com.compass.model.entity.Transaction;
 import br.com.compass.model.entity.enums.TransactionType;
@@ -25,7 +26,7 @@ public class AccountView {
         boolean running = true;
 
         while (running) {
-            System.out.println("========= Bank Menu =========");
+            System.out.println("\n========= Bank Menu =========");
             System.out.println("|| 1. Deposit              ||");
             System.out.println("|| 2. Withdraw             ||");
             System.out.println("|| 3. Check Balance        ||");
@@ -64,52 +65,62 @@ public class AccountView {
     }
 
     private void deposit(Account account) {
-        System.out.print("Enter the deposit amount: ");
-        BigDecimal amount = scanner.nextBigDecimal();
-        scanner.nextLine();
+        while (true) {
+            System.out.print("Enter the deposit amount: ");
+            BigDecimal amount = scanner.nextBigDecimal();
+            scanner.nextLine();
 
-        try {
-            accountController.deposit(account, amount);
-            System.out.println("Deposit successful!");
-            System.out.println("Updated Balance: " + String.format("%.2f",account.getBalance()));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            try {
+                accountController.deposit(account, amount);
+                System.out.println("Deposit successful!");
+                System.out.println("Updated Balance: " + String.format("%.2f", account.getBalance()));
+                break;
+            } catch (InvalidTransactionException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Please enter a valid deposit amount.");
+            }
         }
     }
 
     private void withdraw(Account account) {
-        System.out.print("Enter the withdrawal amount: ");
-        BigDecimal amount = scanner.nextBigDecimal();
-        scanner.nextLine();
+        while (true) {
+            System.out.print("Enter the withdrawal amount: ");
+            BigDecimal amount = scanner.nextBigDecimal();
+            scanner.nextLine();
 
-        try {
-            accountController.withdraw(account, amount);
-            System.out.println("Withdrawal successful!");
-            System.out.println("Updated Balance: " + String.format("%.2f",account.getBalance()));
-        } catch (InsufficientFundsException | IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            try {
+                accountController.withdraw(account, amount);
+                System.out.println("Withdrawal successful!");
+                System.out.println("Updated Balance: " + String.format("%.2f", account.getBalance()));
+                break;
+            } catch (InsufficientFundsException | InvalidTransactionException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
     }
 
     private void checkBalance(Account account) {
         System.out.println("\n=== Account Balance ===");
-        System.out.println("Current Balance: " + String.format("%.2f",account.getBalance()));
+        System.out.println("Current Balance: " + String.format("%.2f", account.getBalance()));
     }
 
     private void transfer(Account sourceAccount) {
-        System.out.print("Enter the destination account number: ");
-        String destinationAccountNumber = scanner.nextLine();
+        while (true) {
+            System.out.print("Enter the destination account number: ");
+            String destinationAccountNumber = scanner.nextLine();
 
-        System.out.print("Enter the transfer amount: ");
-        BigDecimal amount = scanner.nextBigDecimal();
-        scanner.nextLine();
+            System.out.print("Enter the transfer amount: ");
+            BigDecimal amount = scanner.nextBigDecimal();
+            scanner.nextLine();
 
-        try {
-            accountController.transfer(sourceAccount, destinationAccountNumber, amount);
-            System.out.println("Transfer successful!");
-            System.out.println("Updated Balance: " + String.format("%.2f",sourceAccount.getBalance()));
-        } catch (InvalidAccountException | InsufficientFundsException | IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
+            try {
+                accountController.transfer(sourceAccount, destinationAccountNumber, amount);
+                System.out.println("Transfer successful!");
+                System.out.println("Updated Balance: " + String.format("%.2f", sourceAccount.getBalance()));
+                break;
+            } catch (InvalidAccountException | InsufficientFundsException | InvalidTransactionException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         }
     }
 
@@ -129,7 +140,7 @@ public class AccountView {
             if (transaction.getTransactionType() == TransactionType.TRANSFER) {
                 System.out.println("Destination Account: " + transaction.getTransferDestinationAccount().getAccountNumber());
             }
-            System.out.println("Amount: " + String.format("%.2f",transaction.getAmount()));
+            System.out.println("Amount: " + String.format("%.2f", transaction.getAmount()));
             System.out.println("-----------------------------");
         }
     }

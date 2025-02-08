@@ -1,5 +1,6 @@
 package br.com.compass.model.repository;
 
+import br.com.compass.model.entity.Account;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
@@ -35,6 +36,20 @@ public abstract class RepositoryFactory<T> {
                 transaction.rollback();
             }
             throw new RuntimeException("Failed to save entity: " + e.getMessage(), e);
+        }
+    }
+
+    public void update(Account account) {
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction();
+            getEntityManager().merge(account);
+            commitTransaction(transaction);
+        } catch (Exception e) {
+            if (transaction != null && transaction.isActive()) {
+                rollbackTransaction(transaction);
+            }
+            throw new RuntimeException("Failed to update account: " + e.getMessage(), e);
         }
     }
 
