@@ -30,7 +30,7 @@ public class UserView {
         boolean running = true;
 
         while (running) {
-            System.out.println("========= Main Menu =========");
+            System.out.println("\n========= Main Menu =========");
             System.out.println("|| 1. Login                ||");
             System.out.println("|| 2. Account Opening      ||");
             System.out.println("|| 0. Exit                 ||");
@@ -75,7 +75,7 @@ public class UserView {
 
                 if (accounts.isEmpty()) {
                     System.out.println("No accounts found for this user. Please create an account first.");
-                    return; // Sai do login se não houver contas
+                    return;
                 }
 
                 List<Account> accountList = new ArrayList<>(accounts);
@@ -93,11 +93,18 @@ public class UserView {
                     Account account = accountList.get(choice - 1);
                     AccountView accountView = new AccountView(userController.getAccountController());
                     accountView.showBankMenu(account);
-                    return; // Sai do loop após abrir o menu bancário
+                    return;
                 } else {
                     System.out.println("Invalid choice.");
                 }
-            } catch (UserNotFoundException | IncorrectPasswordException e) {
+                break;
+            } catch (UserNotFoundException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Please try again.");
+            } catch (IncorrectPasswordException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Please try again.");
+            } catch (IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
                 System.out.println("Please try again.");
             }
@@ -126,8 +133,6 @@ public class UserView {
         AccountType accountType = AccountType.fromCode(accountTypeCode);
 
         try {
-//            userController.registerUser(user);
-//            Account account = userController.createAccount(user, accountType);
             userController.registerUserAndCreateAccount(user, accountType);
             System.out.println("\nAccount opened successfully!");
             System.out.println("Name: " + user.getName());

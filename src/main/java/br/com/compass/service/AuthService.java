@@ -21,18 +21,24 @@ public class AuthService {
 
 
     public User loginUser(String cpf, String password) {
+
+        if (password == null || password.length() < 6) {
+            throw new IllegalArgumentException("Password must be at least 6 characters long.");
+        }
+
         Optional<User> user = userRepository.findByCpf(cpf);
         if (user.isEmpty()) {
             throw new UserNotFoundException("User not found!");
         }
 
-        passwordValidator.validate(password);
+        User userFound = user.get();
+
+        PasswordValidator.validate(password);
         if (!user.get().getPassword().equals(password)) {
             throw new IncorrectPasswordException("Incorrect password!");
         }
 
-        System.out.println("Successful login!");
-        return user.get();
+        return userFound;
     }
 
     public void close() {

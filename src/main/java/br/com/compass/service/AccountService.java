@@ -42,7 +42,7 @@ public class AccountService {
         }
 
         account.setBalance(account.getBalance().add(amount));
-        accountRepository.save(account);
+        accountRepository.update(account);
 
         Transaction transaction = new Transaction(account, TransactionType.DEPOSIT, amount);
         transactionRepository.save(transaction);
@@ -57,7 +57,7 @@ public class AccountService {
         }
 
         account.setBalance(account.getBalance().subtract(amount));
-        accountRepository.save(account);
+        accountRepository.update(account);
 
         Transaction transaction = new Transaction(account, TransactionType.WITHDRAWAL, amount);
         transactionRepository.save(transaction);

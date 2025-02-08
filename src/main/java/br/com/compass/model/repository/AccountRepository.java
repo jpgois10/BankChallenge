@@ -39,4 +39,8 @@ public class AccountRepository extends RepositoryFactory<Account> {
     public void save(Account account) {
         super.save(account);
     }
+
+    public void update(Account account) {
+        super.update(account);
+    }
 }
