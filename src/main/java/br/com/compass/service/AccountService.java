@@ -7,8 +7,8 @@ import br.com.compass.model.entity.enums.TransactionType;
 import br.com.compass.exception.InsufficientFundsException;
 import br.com.compass.exception.InvalidAccountException;
 import br.com.compass.exception.InvalidTransactionException;
-import br.com.compass.model.repository.AccountRepository;
-import br.com.compass.model.repository.TransactionRepository;
+import br.com.compass.repository.AccountRepository;
+import br.com.compass.repository.TransactionRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -79,8 +79,11 @@ public class AccountService {
             throw new InsufficientFundsException("Insufficient balance to complete the transfer.");
         }
 
-        withdraw(sourceAccount, amount);
-        deposit(destinationAccount, amount);
+        sourceAccount.setBalance(sourceAccount.getBalance().subtract(amount));
+        destinationAccount.setBalance(destinationAccount.getBalance().add(amount));
+
+        accountRepository.update(sourceAccount);
+        accountRepository.update(destinationAccount);
 
         Transaction transaction = new Transaction(sourceAccount, TransactionType.TRANSFER, amount, destinationAccount);
         transactionRepository.save(transaction);

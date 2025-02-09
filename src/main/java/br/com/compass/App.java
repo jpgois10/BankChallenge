@@ -2,7 +2,7 @@ package br.com.compass;
 
 import br.com.compass.controller.AccountController;
 import br.com.compass.controller.UserController;
-import br.com.compass.model.repository.UserRepository;
+import br.com.compass.repository.UserRepository;
 import br.com.compass.service.AccountService;
 import br.com.compass.service.AuthService;
 import br.com.compass.service.UserService;
@@ -13,9 +13,13 @@ import br.com.compass.view.UserView;
 
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class App {
     public static void main(String[] args) {
+        Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
         Locale.setDefault(Locale.US);
         Scanner scanner = new Scanner(System.in);
 

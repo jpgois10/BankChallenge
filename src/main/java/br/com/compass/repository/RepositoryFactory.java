@@ -1,4 +1,4 @@
-package br.com.compass.model.repository;
+package br.com.compass.repository;
 
 import br.com.compass.model.entity.Account;
 import jakarta.persistence.EntityManager;
