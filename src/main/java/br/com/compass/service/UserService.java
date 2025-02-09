@@ -6,7 +6,7 @@ import br.com.compass.model.entity.User;
 import br.com.compass.model.entity.enums.AccountType;
 import br.com.compass.exception.DuplicateAccountException;
 import br.com.compass.exception.UserNotFoundException;
-import br.com.compass.model.repository.UserRepository;
+import br.com.compass.repository.UserRepository;
 import br.com.compass.service.validation.CPFValidator;
 import br.com.compass.service.validation.PasswordValidator;
 import jakarta.persistence.EntityTransaction;
